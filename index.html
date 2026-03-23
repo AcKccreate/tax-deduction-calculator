@@ -208,7 +208,7 @@ select option{background:var(--s2);color:var(--t)}
 
   <div class="support">
     <p>Free tax tracking by AnchorWithin.</p>
-    <a href="https://ko-fi.com/anchorwithin" target="_blank" rel="noopener">&#9749; Support AnchorWithin</a>
+    <button class="btn btn-gold btn-wide" onclick="unlockPro()" style="margin-top:8px">&#128081; Unlock Tax Pro &mdash; $4.99</button>
   </div>
 </div>
 
@@ -798,6 +798,12 @@ function init(){
   renderDashboard();
 }
 
+function unlockPro(){
+  window.location.href = 'https://buy.stripe.com/dRm4gAfdI22b6sffj467S0b';
+}
+(function(){
+  if(new URLSearchParams(location.search).get('paid'))try{localStorage.setItem('aw_tax_pro','1')}catch(e){}
+})();
 init();
 </script>
 </body>
