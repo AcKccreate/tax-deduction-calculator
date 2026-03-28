@@ -228,7 +228,7 @@ select option{background:var(--s2);color:var(--t)}
 
   <div class="support">
     <p>Free tax tracking by AnchorWithin.</p>
-    <button class="btn btn-gold btn-wide" onclick="unlockPro()" style="margin-top:8px">&#128081; Unlock Tax Pro &mdash; $4.99</button>
+    <button class="btn btn-gold btn-wide" onclick="unlockPro()" style="margin-top:8px">&#128081; See all 19 categories for $0.99</button>
   </div>
 </div>
 
@@ -369,6 +369,13 @@ select option{background:var(--s2);color:var(--t)}
     <div class="card-label">Deduction Guide</div>
     <div id="deductionGuide"></div>
   </div>
+
+<div style="margin:20px 0 8px;padding:18px 16px;background:rgba(200,168,75,.09);border:1px solid rgba(200,168,75,.3);border-radius:12px;text-align:center">
+  <div style="font-size:.65rem;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:#C8A84B;margin-bottom:8px">SAVE 75%</div>
+  <div style="font-size:1rem;font-weight:700;color:#EDE7DA;margin-bottom:6px">Get ALL 6 Tools for $4.99</div>
+  <div style="font-size:.78rem;color:#9A978F;margin-bottom:14px">Resume Optimizer &middot; Tax Calculator &middot; Resonance Generator &middot; Side Hustle Planner &middot; AI Companion &middot; Anchor Remembers</div>
+  <a href="https://buy.stripe.com/3cI7sM7Lg6ir5obef067S0r" target="_blank" rel="noopener" style="display:inline-block;padding:10px 22px;background:#C8A84B;color:#08101E;font-weight:700;font-size:.85rem;border-radius:8px;text-decoration:none;letter-spacing:.3px">Get the Bundle &rarr;</a>
+</div>
 
   <div class="legal">
     &copy; 2026 AnchorWithin LLC &bull; For estimation only. Not tax advice.<br>
@@ -801,28 +808,23 @@ function init(){
   }).join('');
 
   // Deduction guide
-  document.getElementById('deductionGuide').innerHTML=CATEGORIES.map(c=>`
-    <div class="cat-bar">
-      <span class="cat-icon">${c.icon}</span>
-      <div class="cat-info">
-        <div class="cat-name">${c.name}</div>
-        <div class="cat-detail">${c.desc}</div>
-      </div>
-      <div class="cat-amount">
-        <div class="ca-val" style="color:var(--green)">${c.deductPct}%</div>
-        <div class="ca-ded">${c.forW2?'W2 + 1099':'1099 only'}</div>
-      </div>
-    </div>
-  `).join('');
+  const taxPro = localStorage.getItem('aw_tax_pro');
+  const freeCats = CATEGORIES.slice(0,3);
+  const proCats  = CATEGORIES.slice(3);
+  function catRow(c){return `<div class="cat-bar"><span class="cat-icon">${c.icon}</span><div class="cat-info"><div class="cat-name">${c.name}</div><div class="cat-detail">${c.desc}</div></div><div class="cat-amount"><div class="ca-val" style="color:var(--green)">${c.deductPct}%</div><div class="ca-ded">${c.forW2?'W2 + 1099':'1099 only'}</div></div></div>`;}
+  const freeHtml = freeCats.map(catRow).join('');
+  const proHtml  = proCats.map(catRow).join('');
+  const gateHtml = taxPro ? proHtml : `<div style="position:relative;border-radius:10px;overflow:hidden;margin-top:4px"><div style="filter:blur(4px);pointer-events:none;user-select:none">${proHtml}</div><div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(8,9,12,.85);backdrop-filter:blur(6px);padding:24px;text-align:center"><div style="font-size:.65rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#C8A84B;margin-bottom:8px">&#128081; PRO CATEGORIES</div><div style="font-size:1rem;font-weight:700;color:#EDE7DA;margin-bottom:6px">+${proCats.length} More Categories</div><div style="font-size:.78rem;color:#9A978F;margin-bottom:14px">3 categories free. Unlock all 19 to find every deduction you qualify for.</div><button onclick="unlockPro()" style="padding:10px 20px;background:#C8A84B;color:#08101E;border:none;border-radius:8px;font-weight:700;font-size:.85rem;cursor:pointer">See all 19 categories for $0.99</button></div></div>`;
+  document.getElementById('deductionGuide').innerHTML = freeHtml + gateHtml;
 
   renderDashboard();
 }
 
 function unlockPro(){
-  window.location.href = 'https://buy.stripe.com/dRm4gAfdI22b6sffj467S0b';
+  window.location.href = 'https://buy.stripe.com/3cI9AU0iOeOXg2P7QC67S0m';
 }
 (function(){
-  if(new URLSearchParams(location.search).get('paid'))try{localStorage.setItem('aw_tax_pro','1')}catch(e){}
+  if(new URLSearchParams(location.search).get('paid')||new URLSearchParams(location.search).get('unlocked'))try{localStorage.setItem('aw_tax_pro','1')}catch(e){}
 })();
 init();
 </script>
