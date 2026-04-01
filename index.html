@@ -2,874 +2,638 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>AI Tax Companion — AnchorWithin</title>
-<meta name="description" content="Track receipts, scan expenses, and maximize deductions year-round. Free AI tax companion by AnchorWithin.">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tax Deduction Tracker — AnchorWithin</title>
+<meta name="description" content="Track 19 IRS deduction categories year-round. Self-employment focus. Export to CSV. Free by AnchorWithin.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-:root{
-  --bg:#07080D;--s:#0E1018;--s2:#141722;--s3:#1A1E2E;
-  --b:rgba(255,255,255,.06);--ba:rgba(207,175,112,.2);
-  --gold:#CFAF70;--gold-b:#E4C97E;--gold-d:#8B7740;--gold-g:rgba(207,175,112,.08);
-  --green:#6EE7A0;--green-g:rgba(110,231,160,.06);--green-b:rgba(110,231,160,.15);
-  --red:#F47171;--red-g:rgba(244,113,113,.06);
-  --blue:#56A5FF;--blue-g:rgba(86,165,255,.06);
-  --amber:#FFD166;--amber-g:rgba(255,209,102,.06);
-  --t:#E8E4DD;--t2:#9B978F;--t3:#5E5B54;
-  --fd:'Instrument Serif',Georgia,serif;
-  --fb:'Outfit',system-ui,sans-serif;
-  --r:16px;--rs:10px;--rx:6px;
+:root {
+  --navy:#0A0D1A; --navy-mid:#111527; --navy-card:#161B30; --navy-lift:#1E2540;
+  --gold:#C9973A; --gold-light:#E5B654; --gold-dim:rgba(201,151,58,0.15);
+  --green:#3DD68C; --green-dim:rgba(61,214,140,0.12);
+  --red:#FF5F5F; --red-dim:rgba(255,95,95,0.12);
+  --blue:#5B9CF6; --blue-dim:rgba(91,156,246,0.12);
+  --cream:#EAE8E0; --cream-dim:rgba(234,232,224,0.55); --cream-faint:rgba(234,232,224,0.08);
+  --border:rgba(201,151,58,0.18); --border-soft:rgba(234,232,224,0.07);
+  --glass:rgba(22,27,48,0.75);
+  --r:16px; --rs:10px; --rx:6px;
+  --shadow:0 8px 32px rgba(0,0,0,0.45);
+  --transition:0.22s cubic-bezier(0.4,0,0.2,1);
 }
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:var(--fb);background:var(--bg);color:var(--t);min-height:100vh;-webkit-font-smoothing:antialiased;overflow-x:hidden}
-body::after{content:'';position:fixed;inset:0;opacity:.02;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");pointer-events:none;z-index:9999}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--navy);color:var(--cream);min-height:100vh;line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+body::before{content:'';position:fixed;inset:0;z-index:0;background:radial-gradient(ellipse 80% 50% at 20% 10%,rgba(201,151,58,0.06) 0%,transparent 60%),radial-gradient(ellipse 60% 40% at 80% 80%,rgba(61,214,140,0.04) 0%,transparent 50%);pointer-events:none}
 
-.hdr{text-align:center;padding:28px 20px 12px;position:relative;z-index:2}
-.hdr-brand{font-size:.62rem;font-weight:600;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:8px;opacity:0;animation:u .6s .1s ease both}
-.hdr h1{font-family:var(--fd);font-size:clamp(1.5rem,5vw,2.2rem);font-weight:400;color:var(--t);line-height:1.15;opacity:0;animation:u .6s .18s ease both}
-.hdr h1 em{font-style:italic;color:var(--gold)}
-.hdr .sub{font-size:.82rem;font-weight:300;color:var(--t2);margin-top:4px;opacity:0;animation:u .6s .28s ease both}
-@keyframes u{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.wrapper{position:relative;z-index:1;max-width:1060px;margin:0 auto;padding:0 20px 80px}
 
-/* ── Tabs ── */
-.tabs{display:flex;border-bottom:1px solid var(--b);position:sticky;top:0;z-index:10;background:var(--bg);padding:0 8px}
-.tab{flex:1;padding:12px 4px;text-align:center;font-size:.72rem;font-weight:600;color:var(--t3);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap}
-.tab.active{color:var(--gold);border-color:var(--gold)}
-.tab .tab-icon{display:block;font-size:1rem;margin-bottom:2px}
+/* Header */
+header{display:flex;align-items:center;justify-content:space-between;padding:24px 0 16px;border-bottom:1px solid var(--border-soft)}
+.logo{display:flex;align-items:center;gap:10px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.05rem;color:var(--cream);text-decoration:none}
+.logo-icon{width:32px;height:32px;background:linear-gradient(135deg,var(--gold),var(--gold-light));border-radius:8px;display:grid;place-items:center;font-size:1rem}
+.badge{font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;background:var(--gold-dim);color:var(--gold);border:1px solid var(--border);padding:4px 10px;border-radius:20px}
 
-.tab-content{display:none;max-width:520px;margin:0 auto;padding:12px 16px 100px}
-.tab-content.active{display:block}
+/* Hero */
+.hero{text-align:center;padding:40px 0 28px}
+.hero-tag{font-size:.65rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;opacity:0;animation:fadeUp .6s .1s both}
+.hero h1{font-family:'Plus Jakarta Sans',sans-serif;font-size:clamp(1.8rem,5vw,2.8rem);font-weight:800;line-height:1.15;margin-bottom:10px;opacity:0;animation:fadeUp .6s .2s both}
+.hero h1 span{background:linear-gradient(135deg,var(--gold),var(--gold-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero p{font-size:.95rem;color:var(--cream-dim);max-width:520px;margin:0 auto;opacity:0;animation:fadeUp .6s .3s both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 
-/* ── Dashboard Cards ── */
-.dash-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
-.dash-card{background:var(--s);border:1px solid var(--b);border-radius:var(--r);padding:16px;text-align:center}
-.dash-card.full{grid-column:1/-1}
-.dash-val{font-family:var(--fd);font-size:1.6rem;font-weight:400;color:var(--t);line-height:1}
+/* Year selector */
+.year-bar{display:flex;align-items:center;justify-content:center;gap:12px;margin:0 0 24px;opacity:0;animation:fadeUp .6s .4s both}
+.year-bar label{font-size:.8rem;color:var(--cream-dim);font-weight:500}
+.year-select{background:var(--navy-card);border:1px solid var(--border);color:var(--cream);padding:6px 14px;border-radius:var(--rs);font-family:'Inter',sans-serif;font-size:.85rem;cursor:pointer;outline:none}
+
+/* Dashboard strip */
+.dash-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:28px;opacity:0;animation:fadeUp .6s .5s both}
+@media(max-width:640px){.dash-strip{grid-template-columns:1fr 1fr}}
+.dash-card{background:var(--navy-card);border:1px solid var(--border-soft);border-radius:var(--r);padding:16px;text-align:center;transition:var(--transition)}
+.dash-card:hover{border-color:var(--border);transform:translateY(-2px)}
+.dash-val{font-family:'Plus Jakarta Sans',sans-serif;font-size:1.5rem;font-weight:800;margin-bottom:4px}
+.dash-val.gold{color:var(--gold-light)}
 .dash-val.green{color:var(--green)}
-.dash-val.gold{color:var(--gold)}
-.dash-lbl{font-size:.62rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--t3);margin-top:4px}
+.dash-val.blue{color:var(--blue)}
+.dash-val.red{color:var(--red)}
+.dash-label{font-size:.68rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--cream-dim)}
 
-/* ── Section Card ── */
-.card{background:var(--s);border:1px solid var(--b);border-radius:var(--r);padding:18px 16px;margin-bottom:12px}
-.card-label{font-size:.62rem;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--t3);margin-bottom:12px;display:flex;align-items:center;gap:8px}
-.card-label::after{content:'';flex:1;height:1px;background:var(--b)}
+/* Progress bar */
+.progress-wrap{background:var(--navy-card);border:1px solid var(--border-soft);border-radius:var(--r);padding:18px 22px;margin-bottom:28px}
+.progress-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.progress-title{font-size:.82rem;font-weight:600;color:var(--cream)}
+.progress-pct{font-size:.82rem;font-weight:700;color:var(--gold)}
+.progress-bar{height:8px;background:var(--cream-faint);border-radius:4px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-light));border-radius:4px;transition:width .6s cubic-bezier(.4,0,.2,1)}
+.progress-sub{font-size:.72rem;color:var(--cream-dim);margin-top:8px}
 
-/* ── Category Bars ── */
-.cat-bar{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--b)}
-.cat-bar:last-child{border:none}
-.cat-icon{font-size:1.1rem;flex-shrink:0;width:28px;text-align:center}
+/* Tabs */
+.tabs{display:flex;gap:4px;padding:4px;background:var(--navy-card);border-radius:12px;margin-bottom:24px;border:1px solid var(--border-soft)}
+.tab{flex:1;padding:9px 6px;text-align:center;font-size:.72rem;font-weight:600;color:var(--cream-dim);cursor:pointer;border-radius:9px;transition:var(--transition);white-space:nowrap}
+.tab.active{background:var(--navy-lift);color:var(--gold);box-shadow:0 2px 8px rgba(0,0,0,.3)}
+
+/* Category grid */
+.cat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:28px}
+@media(max-width:600px){.cat-grid{grid-template-columns:1fr}}
+.cat-card{background:var(--navy-card);border:1px solid var(--border-soft);border-radius:var(--r);padding:16px;transition:var(--transition);cursor:pointer}
+.cat-card:hover{border-color:var(--border);transform:translateY(-1px);box-shadow:var(--shadow)}
+.cat-card.has-entries{border-color:rgba(201,151,58,0.3)}
+.cat-header{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.cat-icon{width:34px;height:34px;border-radius:8px;display:grid;place-items:center;font-size:1rem;flex-shrink:0}
 .cat-info{flex:1;min-width:0}
-.cat-name{font-size:.84rem;font-weight:600;color:var(--t)}
-.cat-detail{font-size:.68rem;color:var(--t3);margin-top:1px}
-.cat-amount{text-align:right;flex-shrink:0}
-.cat-amount .ca-val{font-size:.95rem;font-weight:700;color:var(--t)}
-.cat-amount .ca-ded{font-size:.65rem;color:var(--green)}
+.cat-name{font-size:.85rem;font-weight:600;color:var(--cream);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cat-desc{font-size:.68rem;color:var(--cream-dim);margin-top:1px}
+.cat-total{font-family:'Plus Jakarta Sans',sans-serif;font-size:1.1rem;font-weight:700;color:var(--gold-light);margin-left:auto;flex-shrink:0}
+.cat-bar{height:3px;background:var(--cream-faint);border-radius:2px;overflow:hidden}
+.cat-bar-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-light));border-radius:2px;transition:width .4s ease}
+.cat-count{font-size:.65rem;color:var(--cream-dim);margin-top:4px}
 
-/* ── Month Chart ── */
-.month-chart{display:flex;align-items:flex-end;gap:4px;height:100px;padding:8px 0}
-.month-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
-.month-fill{width:100%;border-radius:4px 4px 0 0;background:var(--gold-g);border:1px solid var(--ba);min-height:2px;transition:height .4s ease}
-.month-lbl{font-size:.55rem;color:var(--t3);font-weight:600}
+/* Entry modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:100;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal{background:var(--navy-mid);border:1px solid var(--border);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:600px;max-height:85vh;overflow-y:auto;transform:translateY(100%);transition:transform .3s cubic-bezier(.4,0,.2,1)}
+.modal-overlay.open .modal{transform:translateY(0)}
+.modal-header{display:flex;align-items:center;justify-content:space-between;padding:20px 20px 0}
+.modal-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:1rem;font-weight:700}
+.modal-close{width:28px;height:28px;border:none;background:var(--cream-faint);color:var(--cream);border-radius:50%;cursor:pointer;font-size:1rem;display:grid;place-items:center}
+.modal-body{padding:16px 20px 24px}
 
-/* ── Receipt Entry ── */
-.scan-zone{border:1.5px dashed var(--ba);border-radius:var(--rs);padding:24px 16px;text-align:center;cursor:pointer;transition:all .2s;margin-bottom:14px}
-.scan-zone:hover{background:var(--gold-g);border-color:var(--gold)}
-.scan-zone .scan-icon{font-size:2rem;margin-bottom:4px}
-.scan-zone p{font-size:.82rem;color:var(--t2)}
-.scan-zone .scan-hint{font-size:.68rem;color:var(--t3);margin-top:4px}
-#receiptFile{display:none}
+/* Form */
+.field{margin-bottom:14px}
+.field label{display:block;font-size:.75rem;font-weight:600;color:var(--cream-dim);margin-bottom:5px;text-transform:uppercase;letter-spacing:.05em}
+.field input,.field select,.field textarea{width:100%;background:var(--navy-lift);border:1px solid var(--border-soft);color:var(--cream);padding:10px 12px;border-radius:var(--rs);font-family:'Inter',sans-serif;font-size:.88rem;outline:none;transition:border-color var(--transition)}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--gold)}
+.field textarea{resize:vertical;min-height:72px}
+.field select option{background:var(--navy-mid)}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 
-.or-divider{text-align:center;font-size:.68rem;color:var(--t3);margin:12px 0;display:flex;align-items:center;gap:10px}
-.or-divider::before,.or-divider::after{content:'';flex:1;height:1px;background:var(--b)}
+/* Entries list */
+.entries-wrap{margin-top:16px}
+.entry-item{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--navy-lift);border-radius:var(--rs);margin-bottom:6px;transition:var(--transition)}
+.entry-item:hover{background:var(--navy-card)}
+.entry-date{font-size:.7rem;color:var(--cream-dim);width:60px;flex-shrink:0}
+.entry-desc{flex:1;font-size:.82rem;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.entry-amount{font-weight:700;color:var(--gold-light);font-size:.88rem;flex-shrink:0}
+.entry-del{background:none;border:none;color:var(--red);cursor:pointer;font-size:1rem;padding:2px 6px;opacity:.5;transition:opacity .15s;flex-shrink:0}
+.entry-del:hover{opacity:1}
 
-.field{margin-bottom:10px}
-.field label{display:block;font-size:.72rem;font-weight:600;color:var(--t2);margin-bottom:4px}
-input[type="text"],input[type="number"],input[type="date"],select,textarea{
-  width:100%;padding:11px 12px;background:var(--s2);border:1px solid var(--b);border-radius:var(--rs);
-  color:var(--t);font-family:var(--fb);font-size:.88rem;outline:none;transition:border-color .2s;-webkit-appearance:none;
-}
-input:focus,select:focus,textarea:focus{border-color:var(--gold-d)}
-input::placeholder{color:var(--t3)}
-select{cursor:pointer}
-select option{background:var(--s2);color:var(--t)}
-
-.row-2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
-
-/* ── Buttons ── */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 24px;border:none;border-radius:var(--rs);font-family:var(--fb);font-size:.86rem;font-weight:600;cursor:pointer;transition:all .2s;text-decoration:none}
-.btn-gold{background:var(--gold);color:var(--bg)}
-.btn-gold:hover{background:var(--gold-b);transform:translateY(-1px);box-shadow:0 6px 20px rgba(207,175,112,.2)}
-.btn-ghost{background:transparent;border:1px solid var(--gold-d);color:var(--gold)}
-.btn-ghost:hover{background:var(--gold-g)}
-.btn-red{background:var(--red-g);border:1px solid rgba(244,113,113,.2);color:var(--red)}
-.btn-red:hover{background:rgba(244,113,113,.12)}
+/* Btn */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 20px;border:none;border-radius:var(--rs);font-family:'Inter',sans-serif;font-size:.85rem;font-weight:600;cursor:pointer;transition:var(--transition);text-decoration:none}
+.btn-gold{background:linear-gradient(135deg,var(--gold),var(--gold-light));color:var(--navy)}
+.btn-gold:hover{filter:brightness(1.1);transform:translateY(-1px)}
+.btn-outline{background:transparent;border:1px solid var(--border);color:var(--cream-dim)}
+.btn-outline:hover{border-color:var(--gold);color:var(--gold)}
+.btn-green{background:var(--green-dim);border:1px solid rgba(61,214,140,0.3);color:var(--green)}
+.btn-green:hover{background:rgba(61,214,140,0.2)}
+.btn-sm{padding:7px 14px;font-size:.75rem}
 .btn-wide{width:100%}
-.btn:disabled{opacity:.4;cursor:not-allowed;transform:none!important}
+.btn-row{display:flex;gap:10px;flex-wrap:wrap}
 
-/* ── Receipt Log ── */
-.receipt-item{display:flex;align-items:center;gap:10px;padding:12px;background:var(--s2);border:1px solid var(--b);border-radius:var(--rs);margin-bottom:6px;transition:border-color .2s}
-.receipt-item:hover{border-color:var(--ba)}
-.ri-icon{font-size:1.1rem;flex-shrink:0}
-.ri-info{flex:1;min-width:0}
-.ri-name{font-size:.84rem;font-weight:600;color:var(--t);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.ri-meta{font-size:.68rem;color:var(--t3);margin-top:1px}
-.ri-amt{text-align:right;flex-shrink:0}
-.ri-amt .ri-total{font-size:.92rem;font-weight:700;color:var(--t)}
-.ri-amt .ri-ded{font-size:.65rem;color:var(--green)}
-.ri-del{padding:4px 8px;background:transparent;border:none;color:var(--t3);cursor:pointer;font-size:.9rem;flex-shrink:0;border-radius:4px;transition:all .15s}
-.ri-del:hover{background:var(--red-g);color:var(--red)}
+/* Tips */
+.tip-box{background:var(--gold-dim);border:1px solid var(--border);border-radius:var(--rs);padding:14px 16px;margin-bottom:20px;font-size:.82rem;color:var(--cream)}
+.tip-box strong{color:var(--gold-light)}
 
-.empty-state{text-align:center;padding:40px 16px;color:var(--t3);font-size:.84rem;font-style:italic}
+/* Self-employment section */
+.se-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+@media(max-width:500px){.se-grid{grid-template-columns:1fr}}
+.se-card{background:var(--navy-card);border:1px solid var(--border-soft);border-radius:var(--r);padding:16px}
+.se-card h4{font-size:.78rem;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px}
 
-/* ── Image Preview ── */
-.img-preview{display:none;margin-bottom:12px;border-radius:var(--rs);overflow:hidden;border:1px solid var(--ba);max-height:200px}
-.img-preview.show{display:block}
-.img-preview img{width:100%;height:auto;display:block;max-height:200px;object-fit:cover}
+/* Summary */
+.summary-table{width:100%;border-collapse:collapse;font-size:.85rem}
+.summary-table th{text-align:left;padding:8px 10px;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--cream-dim);border-bottom:1px solid var(--border-soft)}
+.summary-table td{padding:9px 10px;border-bottom:1px solid var(--border-soft)}
+.summary-table tr:last-child td{border-bottom:none}
+.summary-table .total-row td{font-weight:700;color:var(--gold-light);border-top:1px solid var(--border)}
+.summary-table .amount{text-align:right;font-weight:600}
+.empty-state{text-align:center;padding:40px 20px;color:var(--cream-dim);font-size:.88rem}
+.empty-state .big{font-size:2rem;margin-bottom:8px}
 
-/* ── Settings / Calculator ── */
-.setting-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--b)}
-.setting-row:last-child{border:none}
-.setting-label{font-size:.84rem;color:var(--t)}
-.setting-val{font-size:.84rem;font-weight:600;color:var(--gold)}
+/* Section title */
+.section-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:1rem;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.section-title .pill{font-size:.65rem;font-weight:700;background:var(--gold-dim);color:var(--gold);padding:3px 8px;border-radius:20px}
 
-/* ── Support ── */
-.support{text-align:center;padding:20px}
-.support p{font-size:.72rem;color:var(--t3);margin-bottom:10px}
-.support a{display:inline-flex;align-items:center;gap:6px;padding:8px 20px;background:linear-gradient(135deg,#FF6B6B,#C850C0);color:#fff;text-decoration:none;border-radius:50px;font-weight:700;font-size:.78rem}
+/* Toast */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--navy-lift);border:1px solid var(--border);color:var(--cream);padding:10px 20px;border-radius:30px;font-size:.82rem;font-weight:600;z-index:200;opacity:0;transition:all .3s;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
-.legal{text-align:center;padding:16px;font-size:.6rem;color:var(--t3);line-height:1.7}
-.legal a{color:var(--gold-d);text-decoration:none}
-
-.spin{display:inline-block;width:14px;height:14px;border:2px solid var(--b);border-top-color:var(--gold);border-radius:50%;animation:sp .6s linear infinite;vertical-align:middle;margin-right:4px}
-@keyframes sp{to{transform:rotate(360deg)}}
-
-@media(max-width:380px){
-  .dash-grid{grid-template-columns:1fr}
-  .row-2,.row-3{grid-template-columns:1fr}
-  .tabs{padding:0 4px}
-  .tab{font-size:.65rem;padding:10px 2px}
-}
+footer{text-align:center;padding:32px 0 0;font-size:.72rem;color:rgba(234,232,224,0.25);border-top:1px solid var(--border-soft);margin-top:40px}
+footer a{color:var(--gold);text-decoration:none}
 </style>
-<!-- AW-SEO-INJECTED -->
-<meta name="keywords" content="tax deductions, ai tax tool, expense tracker, tax calculator, self employed taxes">
-<link rel="canonical" href="https://AcKccreate.github.io/tax-deduction-calculator/">
-<!-- Open Graph -->
-<meta property="og:type"        content="website">
-<meta property="og:title"       content="AI Tax Companion — Track Deductions & Maximize Refunds">
-<meta property="og:description" content="AI-powered tax deduction tracker. Scan expenses, find missed deductions, maximize your refund. Free tool by AnchorWithin.">
-<meta property="og:url"         content="https://AcKccreate.github.io/tax-deduction-calculator/">
-<meta property="og:image"       content="https://AcKccreate.github.io/og-image.png">
-<meta property="og:site_name"   content="AnchorWithin">
-<!-- Twitter Card -->
-<meta name="twitter:card"        content="summary_large_image">
-<meta name="twitter:title"       content="AI Tax Companion — Track Deductions & Maximize Refunds">
-<meta name="twitter:description" content="AI-powered tax deduction tracker. Scan expenses, find missed deductions, maximize your refund. Free tool by AnchorWithin.">
-<meta name="twitter:image"       content="https://AcKccreate.github.io/og-image.png">
-<meta name="twitter:site"        content="@AnchorWithin">
-<!-- Structured Data -->
-<script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebApplication","name":"AI Tax Companion — Track Deductions & Maximize Refunds","description":"AI-powered tax deduction tracker. Scan expenses, find missed deductions, maximize your refund. Free tool by AnchorWithin.","url":"https://AcKccreate.github.io/tax-deduction-calculator/","author":{"@type":"Organization","name":"AnchorWithin"},"offers":{"@type":"Offer","price":"$4.99 Pro"}}
-</script>
 </head>
 <body>
+<div class="wrapper">
+  <header>
+    <a href="#" class="logo">
+      <div class="logo-icon">⚓</div>
+      AnchorWithin
+    </a>
+    <div class="badge">Tax Tracker 2026</div>
+  </header>
 
-<div class="hdr">
-  <div class="hdr-brand">AnchorWithin</div>
-  <h1>Tax <em>Companion</em></h1>
-  <div class="sub">Track receipts &middot; Maximize deductions &middot; Year-round</div>
-</div>
+  <div class="hero">
+    <div class="hero-tag">Self-Employment · Freelance · Creator</div>
+    <h1>Your Year-Round<br><span>Tax Deduction</span> Tracker</h1>
+    <p>19 IRS categories, running dashboard, CSV export. Never miss a deduction again.</p>
+  </div>
 
-<!-- ── TABS ── -->
-<div class="tabs">
-  <div class="tab active" onclick="switchTab('dashboard',this)"><span class="tab-icon">&#128200;</span>Dashboard</div>
-  <div class="tab" onclick="switchTab('scan',this)"><span class="tab-icon">&#128247;</span>Add</div>
-  <div class="tab" onclick="switchTab('receipts',this)"><span class="tab-icon">&#128221;</span>Receipts</div>
-  <div class="tab" onclick="switchTab('calc',this)"><span class="tab-icon">&#129518;</span>Calculator</div>
-</div>
+  <div class="year-bar">
+    <label>Tax Year:</label>
+    <select class="year-select" id="yearSelect">
+      <option value="2026">2026</option>
+      <option value="2025">2025</option>
+      <option value="2024">2024</option>
+    </select>
+    <button class="btn btn-outline btn-sm" onclick="exportCSV()">⬇ Export CSV</button>
+    <button class="btn btn-outline btn-sm" onclick="clearYear()">🗑 Clear Year</button>
+  </div>
 
-<!-- ═══ DASHBOARD TAB ═══ -->
-<div class="tab-content active" id="tabDashboard">
-  <div class="dash-grid">
-    <div class="dash-card full" style="background:linear-gradient(135deg,var(--s),var(--s2));border-color:var(--ba)">
-      <div class="dash-val green" id="dashSavings">$0</div>
-      <div class="dash-lbl">Estimated Tax Savings This Year</div>
-    </div>
+  <div class="dash-strip">
     <div class="dash-card">
       <div class="dash-val gold" id="dashTotal">$0</div>
-      <div class="dash-lbl">Total Tracked</div>
+      <div class="dash-label">Total Deductions</div>
     </div>
     <div class="dash-card">
-      <div class="dash-val" id="dashDeductible">$0</div>
-      <div class="dash-lbl">Deductible Amount</div>
+      <div class="dash-val green" id="dashSaved">$0</div>
+      <div class="dash-label">Est. Tax Saved</div>
     </div>
     <div class="dash-card">
-      <div class="dash-val" id="dashReceipts">0</div>
-      <div class="dash-lbl">Receipts Logged</div>
+      <div class="dash-val blue" id="dashEntries">0</div>
+      <div class="dash-label">Entries Logged</div>
     </div>
     <div class="dash-card">
-      <div class="dash-val" id="dashCategories">0</div>
-      <div class="dash-lbl">Categories</div>
+      <div class="dash-val red" id="dashTopCat">—</div>
+      <div class="dash-label">Top Category</div>
     </div>
   </div>
 
-  <!-- Monthly Breakdown -->
-  <div class="card">
-    <div class="card-label">Monthly Spending</div>
-    <div class="month-chart" id="monthChart"></div>
+  <div class="progress-wrap">
+    <div class="progress-header">
+      <span class="progress-title">Categories Used</span>
+      <span class="progress-pct" id="progressPct">0 / 19</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    <div class="progress-sub" id="progressSub">Start logging deductions to see your coverage</div>
   </div>
 
-  <!-- Category Breakdown -->
-  <div class="card">
-    <div class="card-label">By Category</div>
-    <div id="catBreakdown"></div>
+  <div class="tabs" id="mainTabs">
+    <div class="tab active" onclick="switchTab('track')">📋 Track</div>
+    <div class="tab" onclick="switchTab('selfemployed')">💼 Self-Employed</div>
+    <div class="tab" onclick="switchTab('summary')">📊 Summary</div>
+    <div class="tab" onclick="switchTab('tips')">💡 Tips</div>
   </div>
 
-  <div class="support">
-    <p>Free tax tracking by AnchorWithin.</p>
-    <button class="btn btn-gold btn-wide" onclick="unlockPro()" style="margin-top:8px">&#128081; See all 19 categories for $0.99</button>
+  <!-- TAB: TRACK -->
+  <div id="tab-track">
+    <div class="section-title">All 19 IRS Deduction Categories <span class="pill">Click to add entries</span></div>
+    <div class="cat-grid" id="catGrid"></div>
+  </div>
+
+  <!-- TAB: SELF-EMPLOYED -->
+  <div id="tab-selfemployed" style="display:none">
+    <div class="tip-box">
+      <strong>Self-Employment Focus:</strong> As a freelancer or creator, you can deduct business expenses that directly reduce your Schedule C income — and your SE tax. Track these carefully.
+    </div>
+    <div class="section-title">SE Tax Deduction Estimator</div>
+    <div class="se-grid">
+      <div class="se-card">
+        <h4>Net Self-Employment Income</h4>
+        <div class="field"><label>Gross Revenue ($)</label><input type="number" id="seRevenue" placeholder="0" oninput="calcSE()"></div>
+        <div class="field"><label>Total Business Expenses ($)</label><input type="number" id="seExpenses" placeholder="0" oninput="calcSE()"></div>
+      </div>
+      <div class="se-card">
+        <h4>Estimated Results</h4>
+        <div style="font-size:.82rem;line-height:2;color:var(--cream-dim)">
+          Net Profit: <strong id="seNet" style="color:var(--cream)">$0</strong><br>
+          SE Tax (15.3%): <strong id="seTax" style="color:var(--red)">$0</strong><br>
+          Deductible SE Tax (50%): <strong id="seTaxDed" style="color:var(--gold-light)">$0</strong><br>
+          QBI Deduction (20%): <strong id="seQBI" style="color:var(--green)">$0</strong><br>
+          <hr style="border:none;border-top:1px solid var(--border-soft);margin:8px 0">
+          Effective Tax Rate: <strong id="seEffective" style="color:var(--blue)">—</strong>
+        </div>
+      </div>
+    </div>
+    <div class="section-title">Top SE Deduction Categories</div>
+    <div class="cat-grid" id="seQuickCats"></div>
+  </div>
+
+  <!-- TAB: SUMMARY -->
+  <div id="tab-summary" style="display:none">
+    <div class="section-title">Annual Deduction Summary</div>
+    <table class="summary-table" id="summaryTable">
+      <thead><tr><th>Category</th><th>Entries</th><th class="amount">Total</th></tr></thead>
+      <tbody id="summaryBody"></tbody>
+    </table>
+    <div id="summaryEmpty" class="empty-state" style="display:none">
+      <div class="big">📭</div>
+      No deductions logged yet. Start in the Track tab.
+    </div>
+    <div style="margin-top:20px">
+      <button class="btn btn-gold btn-wide" onclick="exportCSV()">⬇ Download CSV Report</button>
+    </div>
+  </div>
+
+  <!-- TAB: TIPS -->
+  <div id="tab-tips" style="display:none">
+    <div class="section-title">IRS Deduction Tips for Freelancers & Creators</div>
+    <div id="tipsList"></div>
   </div>
 </div>
 
-<!-- ═══ SCAN / ADD TAB ═══ -->
-<div class="tab-content" id="tabScan">
-
-  <!-- Camera / Upload -->
-  <div class="card">
-    <div class="card-label">Scan Receipt</div>
-    <div class="scan-zone" onclick="document.getElementById('receiptFile').click()">
-      <div class="scan-icon">&#128247;</div>
-      <p>Tap to scan or upload a receipt</p>
-      <div class="scan-hint">Camera on mobile &middot; File upload on desktop</div>
+<!-- ENTRY MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modalTitle">Add Expense</div>
+      <button class="modal-close" onclick="closeModalDirect()">✕</button>
     </div>
-    <input type="file" id="receiptFile" accept="image/*" capture="environment" onchange="handleReceiptImage(event)">
-    <div class="img-preview" id="imgPreview"><img id="imgPreviewSrc"></div>
-    <div id="scanResult"></div>
-  </div>
-
-  <div class="or-divider">or enter manually</div>
-
-  <!-- Manual Entry -->
-  <div class="card">
-    <div class="card-label">Add Expense</div>
-    <div class="field">
-      <label>Description</label>
-      <input type="text" id="expDesc" placeholder="e.g. Office supplies at Staples">
-    </div>
-    <div class="row-2">
-      <div class="field">
-        <label>Amount ($)</label>
-        <input type="number" id="expAmount" placeholder="47.92" step="0.01" min="0">
+    <div class="modal-body">
+      <div class="field-row">
+        <div class="field">
+          <label>Amount ($)</label>
+          <input type="number" id="entryAmount" placeholder="0.00" step="0.01" min="0">
+        </div>
+        <div class="field">
+          <label>Date</label>
+          <input type="date" id="entryDate">
+        </div>
       </div>
       <div class="field">
-        <label>Date</label>
-        <input type="date" id="expDate">
+        <label>Description</label>
+        <input type="text" id="entryDesc" placeholder="Brief description of expense">
+      </div>
+      <div class="field">
+        <label>Vendor / Payee</label>
+        <input type="text" id="entryVendor" placeholder="Who was this paid to?">
+      </div>
+      <div class="field">
+        <label>Notes (optional)</label>
+        <textarea id="entryNotes" placeholder="Business purpose, client name, etc."></textarea>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-gold" onclick="saveEntry()">Save Entry</button>
+        <button class="btn btn-outline" onclick="closeModalDirect()">Cancel</button>
+      </div>
+      <div class="entries-wrap">
+        <div class="section-title" id="modalEntriesTitle" style="margin-top:16px;font-size:.85rem"></div>
+        <div id="modalEntries"></div>
       </div>
     </div>
-    <div class="field">
-      <label>Category</label>
-      <select id="expCategory"></select>
-    </div>
-    <div class="field">
-      <label>Business Use % (optional)</label>
-      <input type="number" id="expBizPct" placeholder="100" min="0" max="100" value="100">
-    </div>
-    <div class="field">
-      <label>Notes (optional)</label>
-      <input type="text" id="expNotes" placeholder="Client meeting, project name, etc.">
-    </div>
-    <button class="btn btn-gold btn-wide" onclick="addExpense()">&#10133;&ensp;Add Expense</button>
-  </div>
-
-  <!-- Quick Add Buttons -->
-  <div class="card">
-    <div class="card-label">Quick Add Common Expenses</div>
-    <div style="display:flex;flex-wrap:wrap;gap:6px" id="quickBtns"></div>
   </div>
 </div>
 
-<!-- ═══ RECEIPTS TAB ═══ -->
-<div class="tab-content" id="tabReceipts">
-  <div class="card">
-    <div class="card-label">Filter</div>
-    <div class="row-3">
-      <div class="field">
-        <select id="filterCat" onchange="renderReceipts()">
-          <option value="all">All Categories</option>
-        </select>
-      </div>
-      <div class="field">
-        <select id="filterMonth" onchange="renderReceipts()">
-          <option value="all">All Months</option>
-        </select>
-      </div>
-      <div class="field">
-        <select id="filterSort" onchange="renderReceipts()">
-          <option value="newest">Newest</option>
-          <option value="oldest">Oldest</option>
-          <option value="highest">Highest $</option>
-          <option value="lowest">Lowest $</option>
-        </select>
-      </div>
-    </div>
-  </div>
+<div class="toast" id="toast"></div>
 
-  <div id="receiptList"></div>
-
-  <div style="display:flex;gap:8px;margin-top:12px">
-    <button class="btn btn-ghost" style="flex:1" onclick="exportCSV()">&#128190; Export CSV</button>
-    <button class="btn btn-red" style="flex:1" onclick="clearAll()">&#128465; Clear All</button>
-  </div>
-</div>
-
-<!-- ═══ CALCULATOR TAB ═══ -->
-<div class="tab-content" id="tabCalc">
-  <div class="card">
-    <div class="card-label">Tax Estimator</div>
-    <div class="field">
-      <label>Annual Gross Income</label>
-      <input type="text" id="calcIncome" placeholder="$75,000" inputmode="numeric">
-    </div>
-    <div class="row-2">
-      <div class="field">
-        <label>Filing Status</label>
-        <select id="calcFiling">
-          <option value="single">Single</option>
-          <option value="joint">Married Joint</option>
-          <option value="separate">Married Separate</option>
-          <option value="head">Head of Household</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>Work Type</label>
-        <select id="calcWork">
-          <option value="w2">W-2 Employee</option>
-          <option value="self">Self-Employed</option>
-          <option value="both">Both</option>
-        </select>
-      </div>
-    </div>
-    <button class="btn btn-gold btn-wide" onclick="runCalc()">&#9889;&ensp;Calculate</button>
-  </div>
-
-  <div class="card" id="calcResults" style="display:none">
-    <div class="card-label">Results</div>
-    <div class="setting-row"><span class="setting-label">Total Tracked Expenses</span><span class="setting-val" id="crTracked">$0</span></div>
-    <div class="setting-row"><span class="setting-label">Total Deductible</span><span class="setting-val" id="crDeductible">$0</span></div>
-    <div class="setting-row"><span class="setting-label">Standard Deduction</span><span class="setting-val" id="crStandard">$0</span></div>
-    <div class="setting-row"><span class="setting-label">Better Option</span><span class="setting-val" id="crBetter">-</span></div>
-    <div class="setting-row"><span class="setting-label">Taxable Income</span><span class="setting-val" id="crTaxable">$0</span></div>
-    <div class="setting-row"><span class="setting-label">Estimated Tax</span><span class="setting-val" id="crTax">$0</span></div>
-    <div class="setting-row" style="border:none"><span class="setting-label" style="font-weight:700;color:var(--green)">Estimated Savings vs No Deductions</span><span class="setting-val" style="color:var(--green)" id="crSavings">$0</span></div>
-  </div>
-
-  <!-- Deduction Guide -->
-  <div class="card">
-    <div class="card-label">Deduction Guide</div>
-    <div id="deductionGuide"></div>
-  </div>
-
-<div style="margin:20px 0 8px;padding:18px 16px;background:rgba(200,168,75,.09);border:1px solid rgba(200,168,75,.3);border-radius:12px;text-align:center">
-  <div style="font-size:.65rem;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:#C8A84B;margin-bottom:8px">SAVE 75%</div>
-  <div style="font-size:1rem;font-weight:700;color:#EDE7DA;margin-bottom:6px">Get ALL 6 Tools for $4.99</div>
-  <div style="font-size:.78rem;color:#9A978F;margin-bottom:14px">Resume Optimizer &middot; Tax Calculator &middot; Resonance Generator &middot; Side Hustle Planner &middot; AI Companion &middot; Anchor Remembers</div>
-  <a href="https://buy.stripe.com/3cI7sM7Lg6ir5obef067S0r" target="_blank" rel="noopener" style="display:inline-block;padding:10px 22px;background:#C8A84B;color:#08101E;font-weight:700;font-size:.85rem;border-radius:8px;text-decoration:none;letter-spacing:.3px">Get the Bundle &rarr;</a>
-</div>
-
-  <div class="legal">
-    &copy; 2026 AnchorWithin LLC &bull; For estimation only. Not tax advice.<br>
-    Consult a qualified professional for your situation.<br>
-    <a href="https://youtube.com/@AnchorWithin">YouTube</a> &middot; <a href="https://ko-fi.com/anchorwithin">Ko-fi</a>
-  </div>
-</div>
+<footer>&copy; 2026 AnchorWithin LLC · All data stored locally · Not financial advice<br><a href="https://youtube.com/@AnchorWithin">YouTube</a> &middot; <a href="https://ackccreate.github.io/anchorwithin-store/">Store</a></footer>
 
 <script>
-/* ═══════════════════════════════════════
-   CATEGORY DATABASE WITH DEDUCTION RULES
-   ═══════════════════════════════════════ */
 const CATEGORIES = [
-  { id:'office',       name:'Office Supplies',        icon:'\uD83D\uDCCE', deductPct:100, forSelf:true,  forW2:false, desc:'Paper, ink, pens, desk items' },
-  { id:'software',     name:'Software & Subscriptions',icon:'\uD83D\uDCBB', deductPct:100, forSelf:true,  forW2:false, desc:'SaaS, cloud, tools, apps' },
-  { id:'equipment',    name:'Equipment & Hardware',    icon:'\uD83D\uDDA5\uFE0F', deductPct:100, forSelf:true,  forW2:false, desc:'Computers, monitors, cameras' },
-  { id:'internet',     name:'Internet & Phone',        icon:'\uD83D\uDCF6', deductPct:50,  forSelf:true,  forW2:false, desc:'Business % of bills (typically 50%)' },
-  { id:'travel',       name:'Travel & Transportation', icon:'\u2708\uFE0F', deductPct:100, forSelf:true,  forW2:false, desc:'Flights, hotels, rental cars for business' },
-  { id:'meals',        name:'Business Meals',          icon:'\uD83C\uDF7D\uFE0F', deductPct:50,  forSelf:true,  forW2:false, desc:'Client meals, business lunches (50%)' },
-  { id:'vehicle',      name:'Vehicle / Mileage',       icon:'\uD83D\uDE97', deductPct:100, forSelf:true,  forW2:false, desc:'67\u00A2/mile or actual expenses' },
-  { id:'home_office',  name:'Home Office',             icon:'\uD83C\uDFE0', deductPct:100, forSelf:true,  forW2:false, desc:'$5/sqft safe harbor or actual method' },
-  { id:'health',       name:'Health Insurance',        icon:'\uD83C\uDFE5', deductPct:100, forSelf:true,  forW2:false, desc:'Self-employed premium deduction' },
-  { id:'education',    name:'Education & Training',    icon:'\uD83D\uDCDA', deductPct:100, forSelf:true,  forW2:true,  desc:'Work-related courses, certs, books' },
-  { id:'professional', name:'Professional Services',   icon:'\uD83D\uDC54', deductPct:100, forSelf:true,  forW2:false, desc:'Accountant, lawyer, consultant fees' },
-  { id:'insurance',    name:'Business Insurance',      icon:'\uD83D\uDEE1\uFE0F', deductPct:100, forSelf:true,  forW2:false, desc:'Liability, E&O, cyber insurance' },
-  { id:'marketing',    name:'Advertising & Marketing', icon:'\uD83D\uDCE3', deductPct:100, forSelf:true,  forW2:false, desc:'Ads, domains, hosting, business cards' },
-  { id:'charitable',   name:'Charitable Donations',    icon:'\u2764\uFE0F', deductPct:100, forSelf:true,  forW2:true,  desc:'Cash/goods to qualified 501(c)(3) orgs' },
-  { id:'medical',      name:'Medical Expenses',        icon:'\uD83E\uDE7A', deductPct:100, forSelf:true,  forW2:true,  desc:'Exceeding 7.5% of AGI' },
-  { id:'retirement',   name:'Retirement Contributions',icon:'\uD83C\uDFE6', deductPct:100, forSelf:true,  forW2:true,  desc:'SEP-IRA, Solo 401k, Traditional IRA' },
-  { id:'mortgage',     name:'Mortgage Interest',       icon:'\uD83C\uDFE1', deductPct:100, forSelf:true,  forW2:true,  desc:'Interest on primary residence' },
-  { id:'student_loan', name:'Student Loan Interest',   icon:'\uD83C\uDF93', deductPct:100, forSelf:true,  forW2:true,  desc:'Up to $2,500 deductible' },
-  { id:'other',        name:'Other Deductible',        icon:'\uD83D\uDCC1', deductPct:100, forSelf:true,  forW2:true,  desc:'Other tax-deductible expenses' },
+  {id:'home_office',name:'Home Office',icon:'🏠',color:'#5B9CF6',desc:'Dedicated workspace deduction',seOnly:false,tip:'Must be used regularly & exclusively for business. Use simplified method: $5/sq ft up to 300 sq ft.'},
+  {id:'vehicle',name:'Vehicle / Mileage',icon:'🚗',color:'#C9973A',desc:'Business driving & auto expenses',seOnly:false,tip:'2024 standard mileage rate: 67¢/mile. Keep a mileage log with date, destination, purpose.'},
+  {id:'equipment',name:'Equipment & Tech',icon:'💻',color:'#3DD68C',desc:'Computers, phones, cameras',seOnly:false,tip:'Section 179 allows full deduction in year of purchase. Bonus depreciation also available.'},
+  {id:'software',name:'Software & Subscriptions',icon:'📱',color:'#A855F7',desc:'SaaS, apps, tools for business',seOnly:false,tip:'Any subscription used for your business — Adobe, Notion, Canva, accounting software, etc.'},
+  {id:'marketing',name:'Advertising & Marketing',icon:'📣',color:'#F59E0B',desc:'Ads, social media, promotions',seOnly:false,tip:'Facebook/Google ads, business cards, website hosting, SEO tools, sponsored content.'},
+  {id:'professional',name:'Professional Services',icon:'⚖️',color:'#EF4444',desc:'Legal, accounting, consulting',seOnly:false,tip:'CPA fees, attorney fees, bookkeeper — all deductible as ordinary business expenses.'},
+  {id:'education',name:'Education & Training',icon:'📚',color:'#06B6D4',desc:'Courses, books, conferences',seOnly:false,tip:'Must be to maintain/improve skills in your current business, not to qualify for a new career.'},
+  {id:'travel',name:'Business Travel',icon:'✈️',color:'#8B5CF6',desc:'Flights, hotels, transportation',seOnly:false,tip:'Travel must be away from your tax home for business. Keep receipts and a trip log.'},
+  {id:'meals',name:'Meals (50%)',icon:'🍽️',color:'#10B981',desc:'Business meals with clients',seOnly:false,tip:'50% deductible. Must have business purpose. Document who was present and what was discussed.'},
+  {id:'insurance',name:'Health Insurance',icon:'🏥',color:'#F43F5E',desc:'Self-employed health premiums',seOnly:true,tip:'100% deductible for self-employed if not eligible for employer plan. Includes family coverage.'},
+  {id:'retirement',name:'Retirement Contributions',icon:'💰',color:'#FBBF24',desc:'SEP-IRA, Solo 401k, SIMPLE',seOnly:true,tip:'SEP-IRA: up to 25% of net earnings (max $69,000). Solo 401k: up to $69,000 total for 2024.'},
+  {id:'utilities',name:'Utilities (Business %)',icon:'💡',color:'#60A5FA',desc:'Internet, phone, electricity',seOnly:false,tip:'Business % of your internet and phone. If home office: business % of utilities in that space.'},
+  {id:'rent',name:'Office Rent / Coworking',icon:'🏢',color:'#F97316',desc:'Rented office or coworking space',seOnly:false,tip:'100% deductible if space is for business use. Includes coworking memberships and day passes.'},
+  {id:'supplies',name:'Office Supplies',icon:'📎',color:'#84CC16',desc:'Stationery, printer ink, etc.',seOnly:false,tip:'Any supplies directly used for business. Keep all receipts, even small ones — they add up.'},
+  {id:'contractors',name:'Contractors / Freelancers',icon:'👥',color:'#EC4899',desc:'1099 payments to contractors',seOnly:false,tip:'Deductible as business expense. Issue Form 1099-NEC if you pay a contractor $600+ in a year.'},
+  {id:'banking',name:'Bank & Processing Fees',icon:'🏦',color:'#6366F1',desc:'Credit card fees, PayPal, Stripe',seOnly:false,tip:'All payment processing fees (Stripe 2.9%, PayPal) and business bank account fees are deductible.'},
+  {id:'startup',name:'Startup Costs',icon:'🚀',color:'#A78BFA',desc:'First-year launch expenses',seOnly:false,tip:'Deduct up to $5,000 in startup costs in year 1. Remainder amortized over 15 years.'},
+  {id:'gifts',name:'Business Gifts',icon:'🎁',color:'#FB923C',desc:'Client & referral gifts',seOnly:false,tip:'Up to $25 per recipient per year. Gift cards count. Document who received and the business purpose.'},
+  {id:'other',name:'Other Business Expenses',icon:'📦',color:'#9CA3AF',desc:'Ordinary & necessary expenses',seOnly:false,tip:'Anything ordinary and necessary for your business that doesn\'t fit above categories.'},
 ];
 
-const QUICK_EXPENSES = [
-  { desc:'Coffee meeting',       amount:12.50,  cat:'meals' },
-  { desc:'Gas / fuel',           amount:45.00,  cat:'vehicle' },
-  { desc:'Software subscription',amount:29.99,  cat:'software' },
-  { desc:'Office supplies',      amount:35.00,  cat:'office' },
-  { desc:'Internet bill (50%)',  amount:40.00,  cat:'internet' },
-  { desc:'Uber to client',       amount:22.00,  cat:'travel' },
-  { desc:'Online course',        amount:49.99,  cat:'education' },
-  { desc:'Printer ink',          amount:34.99,  cat:'office' },
+const TIPS = [
+  {title:'Track All Year, Not Just April',body:'Use this tracker weekly. Missed deductions at tax time = money left on the table. Even small expenses ($5 parking, $12 app) add up to hundreds per year.'},
+  {title:'The Home Office Deduction',body:'If you have a dedicated space used ONLY for business — even a corner of a room — you can deduct it. Simplified method: $5 × sq ft (max $1,500/year). No receipts needed.'},
+  {title:'Mileage vs. Actual Expenses',body:'Standard mileage (67¢/mile in 2024) is usually easier. Track every business trip in a log app. Actual expenses can be better if you have a newer vehicle.'},
+  {title:'Section 179 Full Expensing',body:'You can deduct the full cost of qualifying equipment in the year you buy it, up to $1.16M. Great for computers, cameras, furniture — no multi-year depreciation needed.'},
+  {title:'Quarterly Estimated Taxes',body:'If you expect to owe $1,000+, pay quarterly (Apr 15, Jun 15, Sep 15, Jan 15). Good deduction tracking helps you estimate accurately and avoid underpayment penalties.'},
+  {title:'Retirement Contributions = Double Win',body:'Contributing to a SEP-IRA or Solo 401k reduces your income tax AND your self-employment tax base. Max SEP-IRA: 25% of net earnings, up to $69,000 (2024).'},
+  {title:'The QBI Deduction (Pass-Through)',body:'Most self-employed people can deduct up to 20% of their qualified business income (QBI) with no extra work. This is one of the biggest overlooked deductions.'},
+  {title:'Keep Receipts Digitally',body:'Photo every receipt immediately. Use Google Drive, Dropbox, or an expense app. IRS requires documentation for deductions over $250. No receipt = risky deduction.'},
 ];
 
-/* ═══════════════════════════════════════
-   STATE & STORAGE
-   ═══════════════════════════════════════ */
-let expenses = [];
+const SE_CAT_IDS = ['home_office','insurance','retirement','vehicle','equipment','software','marketing'];
 
-function saveData(){
-  try{localStorage.setItem('aw_tax_companion',JSON.stringify({expenses,version:2}))}catch(e){}
+let state = {year:'2026', entries:{}, currentCatId:null};
+
+function loadState(){
+  const raw = localStorage.getItem('aw_tax_state');
+  if(raw) try { state = JSON.parse(raw); } catch(e){}
+  document.getElementById('yearSelect').value = state.year || '2026';
 }
 
-function loadData(){
-  try{
-    const d=JSON.parse(localStorage.getItem('aw_tax_companion'));
-    if(d&&d.expenses) expenses=d.expenses;
-  }catch(e){}
+function saveState(){
+  localStorage.setItem('aw_tax_state',JSON.stringify(state));
 }
 
-loadData();
-
-/* ═══════════════════════════════════════
-   TAB SWITCHING
-   ═══════════════════════════════════════ */
-function switchTab(name,el){
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
-  el.classList.add('active');
-  document.getElementById('tab'+name.charAt(0).toUpperCase()+name.slice(1)).classList.add('active');
-  if(name==='dashboard') renderDashboard();
-  if(name==='receipts') renderReceipts();
+function getYearEntries(){
+  if(!state.entries[state.year]) state.entries[state.year]={};
+  return state.entries[state.year];
 }
 
-/* ═══════════════════════════════════════
-   ADD EXPENSE
-   ═══════════════════════════════════════ */
-function addExpense(preset){
-  let desc,amount,date,catId,bizPct,notes;
+function getCatEntries(catId){
+  const ye = getYearEntries();
+  if(!ye[catId]) ye[catId]=[];
+  return ye[catId];
+}
 
-  if(preset){
-    desc=preset.desc;
-    amount=preset.amount;
-    date=new Date().toISOString().split('T')[0];
-    catId=preset.cat;
-    bizPct=100;
-    notes='Quick add';
-  } else {
-    desc=document.getElementById('expDesc').value.trim();
-    amount=parseFloat(document.getElementById('expAmount').value);
-    date=document.getElementById('expDate').value;
-    catId=document.getElementById('expCategory').value;
-    bizPct=parseInt(document.getElementById('expBizPct').value)||100;
-    notes=document.getElementById('expNotes').value.trim();
-
-    if(!desc){document.getElementById('expDesc').focus();return;}
-    if(!amount||amount<=0){document.getElementById('expAmount').focus();return;}
-    if(!date) date=new Date().toISOString().split('T')[0];
-  }
-
-  const cat=CATEGORIES.find(c=>c.id===catId)||CATEGORIES[0];
-  const effectiveDeductPct=Math.min(cat.deductPct, bizPct);
-  const deductibleAmount=amount*(effectiveDeductPct/100);
-
-  expenses.push({
-    id: Date.now()+'_'+Math.random().toString(36).substr(2,4),
-    desc, amount, date, catId, bizPct, notes,
-    deductPct: effectiveDeductPct,
-    deductible: deductibleAmount,
-    created: new Date().toISOString()
+function buildCatGrid(){
+  const ye = getYearEntries();
+  const allTotals = CATEGORIES.map(c=>{
+    const entries = ye[c.id]||[];
+    return entries.reduce((s,e)=>s+(parseFloat(e.amount)||0),0);
   });
+  const maxTotal = Math.max(...allTotals,1);
 
-  saveData();
-
-  if(!preset){
-    document.getElementById('expDesc').value='';
-    document.getElementById('expAmount').value='';
-    document.getElementById('expNotes').value='';
-    showToast(`Added: ${desc} ($${amount.toFixed(2)})`);
-  } else {
-    showToast(`Quick add: ${desc} ($${amount.toFixed(2)})`);
-  }
-
-  renderDashboard();
-}
-
-function deleteExpense(id){
-  expenses=expenses.filter(e=>e.id!==id);
-  saveData();
-  renderReceipts();
-  renderDashboard();
-}
-
-function clearAll(){
-  if(!confirm('Delete ALL receipts? This cannot be undone.')) return;
-  expenses=[];
-  saveData();
-  renderReceipts();
-  renderDashboard();
-}
-
-/* ═══════════════════════════════════════
-   RECEIPT IMAGE HANDLER
-   ═══════════════════════════════════════ */
-function handleReceiptImage(event){
-  const file=event.target.files[0];
-  if(!file) return;
-
-  // Show preview
-  const reader=new FileReader();
-  reader.onload=function(e){
-    document.getElementById('imgPreviewSrc').src=e.target.result;
-    document.getElementById('imgPreview').classList.add('show');
-  };
-  reader.readAsDataURL(file);
-
-  // Simulate AI scan
-  const result=document.getElementById('scanResult');
-  result.innerHTML='<div style="padding:12px;text-align:center"><span class="spin"></span> <span style="color:var(--t2)">Analyzing receipt\u2026</span></div>';
-
-  setTimeout(()=>{
-    // Simulate detection based on filename or random
-    const simItems=generateSimulatedItems(file.name);
-    const total=simItems.reduce((s,i)=>s+i.amount,0);
-
-    result.innerHTML=`
-      <div style="padding:14px;background:var(--green-g);border:1px solid var(--green-b);border-radius:var(--rs);margin-top:12px">
-        <div style="font-size:.78rem;font-weight:700;color:var(--green);margin-bottom:8px">\uD83D\uDD0D Detected ${simItems.length} items</div>
-        ${simItems.map(i=>`
-          <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--b);font-size:.84rem">
-            <span>${i.desc} <span style="font-size:.68rem;color:var(--t3)">${i.catName}</span></span>
-            <span style="color:var(--green)">$${i.amount.toFixed(2)}</span>
-          </div>
-        `).join('')}
-        <div style="display:flex;justify-content:space-between;padding:8px 0 0;font-weight:700;margin-top:4px">
-          <span>Total Deductible</span>
-          <span style="color:var(--green)">$${total.toFixed(2)}</span>
-        </div>
-        <button class="btn btn-gold btn-wide" style="margin-top:12px" onclick="addScannedItems()">&#10133; Add All to Tracker</button>
-      </div>
-    `;
-
-    // Store for adding
-    window._scannedItems=simItems;
-  },2200);
-}
-
-function generateSimulatedItems(filename){
-  // Generate realistic items
-  const pools=[
-    [{desc:'Printer Paper (500 sheets)',amount:24.99,cat:'office'},{desc:'Ink Cartridges',amount:89.99,cat:'office'},{desc:'USB-C Hub',amount:34.99,cat:'equipment'}],
-    [{desc:'Adobe Creative Cloud',amount:54.99,cat:'software'},{desc:'Zoom Pro Monthly',amount:13.33,cat:'software'},{desc:'Canva Pro',amount:12.99,cat:'software'}],
-    [{desc:'Client Lunch',amount:47.50,cat:'meals'},{desc:'Working Coffee',amount:6.75,cat:'meals'}],
-    [{desc:'Uber to meeting',amount:18.50,cat:'travel'},{desc:'Parking downtown',amount:12.00,cat:'travel'}],
-    [{desc:'Office Depot supplies',amount:67.43,cat:'office'},{desc:'Desk lamp',amount:29.99,cat:'equipment'},{desc:'Headset',amount:79.99,cat:'equipment'}],
-  ];
-  const pool=pools[Math.floor(Math.random()*pools.length)];
-  return pool.map(i=>({...i,catName:CATEGORIES.find(c=>c.id===i.cat)?.name||'Other'}));
-}
-
-function addScannedItems(){
-  if(!window._scannedItems) return;
-  const today=new Date().toISOString().split('T')[0];
-  window._scannedItems.forEach(item=>{
-    addExpense({desc:item.desc,amount:item.amount,cat:item.cat});
-  });
-  document.getElementById('scanResult').innerHTML='<div style="padding:12px;text-align:center;color:var(--green);font-weight:600">\u2714 All items added to tracker!</div>';
-  document.getElementById('imgPreview').classList.remove('show');
-  window._scannedItems=null;
-}
-
-/* ═══════════════════════════════════════
-   DASHBOARD RENDERING
-   ═══════════════════════════════════════ */
-function renderDashboard(){
-  const totalSpent=expenses.reduce((s,e)=>s+e.amount,0);
-  const totalDeductible=expenses.reduce((s,e)=>s+e.deductible,0);
-  const estSavings=totalDeductible*0.22; // Rough 22% bracket estimate
-  const usedCats=[...new Set(expenses.map(e=>e.catId))];
-
-  document.getElementById('dashSavings').textContent=fmt(estSavings);
-  document.getElementById('dashTotal').textContent=fmt(totalSpent);
-  document.getElementById('dashDeductible').textContent=fmt(totalDeductible);
-  document.getElementById('dashReceipts').textContent=expenses.length;
-  document.getElementById('dashCategories').textContent=usedCats.length;
-
-  // Monthly chart
-  const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  const monthTotals=new Array(12).fill(0);
-  expenses.forEach(e=>{
-    const m=new Date(e.date).getMonth();
-    if(!isNaN(m)) monthTotals[m]+=e.amount;
-  });
-  const maxMonth=Math.max(...monthTotals,1);
-
-  document.getElementById('monthChart').innerHTML=months.map((m,i)=>{
-    const h=Math.max((monthTotals[i]/maxMonth)*80,2);
-    return `<div class="month-col"><div class="month-fill" style="height:${h}px" title="$${monthTotals[i].toFixed(0)}"></div><div class="month-lbl">${m}</div></div>`;
-  }).join('');
-
-  // Category breakdown
-  const catTotals={};
-  expenses.forEach(e=>{
-    if(!catTotals[e.catId]) catTotals[e.catId]={total:0,deductible:0,count:0};
-    catTotals[e.catId].total+=e.amount;
-    catTotals[e.catId].deductible+=e.deductible;
-    catTotals[e.catId].count++;
-  });
-
-  const sortedCats=Object.entries(catTotals).sort((a,b)=>b[1].total-a[1].total);
-  const catEl=document.getElementById('catBreakdown');
-
-  if(sortedCats.length===0){
-    catEl.innerHTML='<div class="empty-state">No expenses tracked yet. Tap the Add tab to get started.</div>';
-    return;
-  }
-
-  catEl.innerHTML=sortedCats.map(([catId,data])=>{
-    const cat=CATEGORIES.find(c=>c.id===catId)||{name:'Other',icon:'\uD83D\uDCC1',deductPct:100};
-    return `
-      <div class="cat-bar">
-        <span class="cat-icon">${cat.icon}</span>
+  document.getElementById('catGrid').innerHTML = CATEGORIES.map((c,i)=>{
+    const entries = ye[c.id]||[];
+    const total = entries.reduce((s,e)=>s+(parseFloat(e.amount)||0),0);
+    const pct = (total/maxTotal)*100;
+    return `<div class="cat-card${total>0?' has-entries':''}" onclick="openModal('${c.id}')">
+      <div class="cat-header">
+        <div class="cat-icon" style="background:${c.color}22;font-size:1.1rem">${c.icon}</div>
         <div class="cat-info">
-          <div class="cat-name">${cat.name}</div>
-          <div class="cat-detail">${data.count} receipt${data.count>1?'s':''} &middot; ${cat.deductPct}% deductible</div>
+          <div class="cat-name">${c.name}</div>
+          <div class="cat-desc">${c.desc}</div>
         </div>
-        <div class="cat-amount">
-          <div class="ca-val">${fmt(data.total)}</div>
-          <div class="ca-ded">\u2193 ${fmt(data.deductible)} deductible</div>
-        </div>
+        <div class="cat-total">${total>0?'$'+total.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}):''}</div>
       </div>
-    `;
+      <div class="cat-bar"><div class="cat-bar-fill" style="width:${pct}%;background:${c.color}"></div></div>
+      <div class="cat-count">${entries.length} ${entries.length===1?'entry':'entries'} · Click to add</div>
+    </div>`;
   }).join('');
 }
 
-/* ═══════════════════════════════════════
-   RECEIPT LIST RENDERING
-   ═══════════════════════════════════════ */
-function renderReceipts(){
-  let filtered=[...expenses];
-  const catFilter=document.getElementById('filterCat').value;
-  const monthFilter=document.getElementById('filterMonth').value;
-  const sort=document.getElementById('filterSort').value;
-
-  if(catFilter!=='all') filtered=filtered.filter(e=>e.catId===catFilter);
-  if(monthFilter!=='all') filtered=filtered.filter(e=>new Date(e.date).getMonth()===parseInt(monthFilter));
-
-  if(sort==='newest') filtered.sort((a,b)=>new Date(b.date)-new Date(a.date));
-  else if(sort==='oldest') filtered.sort((a,b)=>new Date(a.date)-new Date(b.date));
-  else if(sort==='highest') filtered.sort((a,b)=>b.amount-a.amount);
-  else if(sort==='lowest') filtered.sort((a,b)=>a.amount-b.amount);
-
-  const list=document.getElementById('receiptList');
-
-  if(filtered.length===0){
-    list.innerHTML='<div class="empty-state">No receipts found. Start adding expenses!</div>';
-    return;
-  }
-
-  list.innerHTML=filtered.map(e=>{
-    const cat=CATEGORIES.find(c=>c.id===e.catId)||{icon:'\uD83D\uDCC1',name:'Other'};
-    const d=new Date(e.date);
-    const dateStr=d.toLocaleDateString('en-US',{month:'short',day:'numeric'});
-    return `
-      <div class="receipt-item">
-        <span class="ri-icon">${cat.icon}</span>
-        <div class="ri-info">
-          <div class="ri-name">${e.desc}</div>
-          <div class="ri-meta">${dateStr} &middot; ${cat.name}${e.notes?' &middot; '+e.notes:''}</div>
-        </div>
-        <div class="ri-amt">
-          <div class="ri-total">${fmt(e.amount)}</div>
-          <div class="ri-ded">${e.deductPct}% \u2192 ${fmt(e.deductible)}</div>
-        </div>
-        <button class="ri-del" onclick="deleteExpense('${e.id}')" title="Delete">\u00D7</button>
+function buildSEQuickCats(){
+  const ye = getYearEntries();
+  const seCats = CATEGORIES.filter(c=>SE_CAT_IDS.includes(c.id));
+  document.getElementById('seQuickCats').innerHTML = seCats.map(c=>{
+    const entries = ye[c.id]||[];
+    const total = entries.reduce((s,e)=>s+(parseFloat(e.amount)||0),0);
+    return `<div class="cat-card${total>0?' has-entries':''}" onclick="openModal('${c.id}')">
+      <div class="cat-header">
+        <div class="cat-icon" style="background:${c.color}22">${c.icon}</div>
+        <div class="cat-info"><div class="cat-name">${c.name}</div><div class="cat-desc">${c.desc}</div></div>
+        <div class="cat-total">${total>0?'$'+total.toFixed(2):''}</div>
       </div>
-    `;
+      <div class="cat-count">${entries.length} ${entries.length===1?'entry':'entries'}</div>
+    </div>`;
   }).join('');
 }
 
-/* ═══════════════════════════════════════
-   TAX CALCULATOR
-   ═══════════════════════════════════════ */
-const STD_DED={single:14600,joint:29200,separate:14600,head:21900};
-const BRACKETS=[
-  {max:11600,rate:.10},{max:47150,rate:.12},{max:100525,rate:.22},
-  {max:191950,rate:.24},{max:243725,rate:.32},{max:609350,rate:.35},{max:Infinity,rate:.37}
-];
-
-function calcTax(taxable){
-  if(taxable<=0) return 0;
-  let tax=0,prev=0;
-  for(const b of BRACKETS){
-    if(taxable<=prev) break;
-    tax+=(Math.min(taxable,b.max)-prev)*b.rate;
-    prev=b.max;
-  }
-  return tax;
-}
-
-function runCalc(){
-  const income=parseNum(document.getElementById('calcIncome').value);
-  const filing=document.getElementById('calcFiling').value;
-  const std=STD_DED[filing]||14600;
-  const totalDeductible=expenses.reduce((s,e)=>s+e.deductible,0);
-  const totalTracked=expenses.reduce((s,e)=>s+e.amount,0);
-
-  const useDed=Math.max(totalDeductible,std);
-  const taxable=Math.max(income-useDed,0);
-  const taxNoDeductions=calcTax(income);
-  const taxWithDeductions=calcTax(taxable);
-  const savings=taxNoDeductions-taxWithDeductions;
-
-  const el=id=>document.getElementById(id);
-  el('crTracked').textContent=fmt(totalTracked);
-  el('crDeductible').textContent=fmt(totalDeductible);
-  el('crStandard').textContent=fmt(std);
-  el('crBetter').textContent=totalDeductible>std?'Itemize \u2714':'Standard \u2714';
-  el('crBetter').style.color=totalDeductible>std?'var(--green)':'var(--gold)';
-  el('crTaxable').textContent=fmt(taxable);
-  el('crTax').textContent=fmt(taxWithDeductions);
-  el('crSavings').textContent=fmt(savings);
-  el('calcResults').style.display='block';
-
-  // Update dashboard savings estimate
-  document.getElementById('dashSavings').textContent=fmt(savings>0?savings:totalDeductible*.22);
-}
-
-document.getElementById('calcIncome').addEventListener('blur',function(){
-  const v=parseNum(this.value);
-  if(v>0) this.value='$'+v.toLocaleString();
-});
-
-/* ═══════════════════════════════════════
-   EXPORT
-   ═══════════════════════════════════════ */
-function exportCSV(){
-  if(expenses.length===0){alert('No receipts to export.');return;}
-  let csv='Date,Description,Amount,Category,Business Use %,Deductible Amount,Notes\n';
-  expenses.forEach(e=>{
-    const cat=CATEGORIES.find(c=>c.id===e.catId)?.name||'Other';
-    csv+=`${e.date},"${e.desc}",${e.amount.toFixed(2)},"${cat}",${e.bizPct||100},${e.deductible.toFixed(2)},"${e.notes||''}"\n`;
+function updateDashboard(){
+  const ye = getYearEntries();
+  let total=0, entryCount=0, topCat={name:'—',total:0};
+  let usedCats=0;
+  CATEGORIES.forEach(c=>{
+    const entries = ye[c.id]||[];
+    const sum = entries.reduce((s,e)=>s+(parseFloat(e.amount)||0),0);
+    total+=sum; entryCount+=entries.length;
+    if(sum>0) usedCats++;
+    if(sum>topCat.total) topCat={name:c.name,total:sum};
   });
-  const blob=new Blob([csv],{type:'text/csv'});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');
-  a.href=url;a.download=`anchorwithin-tax-receipts-${new Date().getFullYear()}.csv`;
-  a.click();URL.revokeObjectURL(url);
+  const taxRate=0.25; // assumed marginal
+  document.getElementById('dashTotal').textContent='$'+total.toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0});
+  document.getElementById('dashSaved').textContent='$'+(total*taxRate).toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0});
+  document.getElementById('dashEntries').textContent=entryCount;
+  document.getElementById('dashTopCat').textContent=topCat.total>0?topCat.name:'—';
+  const pct=Math.round((usedCats/19)*100);
+  document.getElementById('progressPct').textContent=usedCats+' / 19';
+  document.getElementById('progressFill').style.width=pct+'%';
+  document.getElementById('progressSub').textContent=usedCats===0?'Start logging deductions to see your coverage':`${pct}% coverage · ${19-usedCats} categories still unused`;
 }
 
-/* ═══════════════════════════════════════
-   HELPERS
-   ═══════════════════════════════════════ */
-function fmt(n){return '$'+Math.round(n).toLocaleString()}
-function parseNum(s){return parseFloat(String(s).replace(/[^0-9.]/g,''))||0}
+function updateSummary(){
+  const ye = getYearEntries();
+  const rows=[];
+  let grandTotal=0;
+  CATEGORIES.forEach(c=>{
+    const entries=ye[c.id]||[];
+    if(entries.length===0) return;
+    const total=entries.reduce((s,e)=>s+(parseFloat(e.amount)||0),0);
+    grandTotal+=total;
+    rows.push({name:c.icon+' '+c.name,count:entries.length,total});
+  });
+  rows.sort((a,b)=>b.total-a.total);
+  const tbody=document.getElementById('summaryBody');
+  const empty=document.getElementById('summaryEmpty');
+  if(rows.length===0){tbody.innerHTML='';empty.style.display='block';return;}
+  empty.style.display='none';
+  tbody.innerHTML=rows.map(r=>`<tr>
+    <td>${r.name}</td>
+    <td style="color:var(--cream-dim)">${r.count}</td>
+    <td class="amount" style="color:var(--gold-light)">$${r.total.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</td>
+  </tr>`).join('')+
+  `<tr class="total-row"><td colspan="2">TOTAL DEDUCTIONS</td><td class="amount">$${grandTotal.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</td></tr>`;
+}
+
+function buildTips(){
+  document.getElementById('tipsList').innerHTML=TIPS.map(t=>`
+    <div style="background:var(--navy-card);border:1px solid var(--border-soft);border-radius:var(--r);padding:16px;margin-bottom:12px">
+      <div style="font-weight:700;color:var(--gold-light);margin-bottom:6px;font-size:.88rem">💡 ${t.title}</div>
+      <div style="font-size:.82rem;color:var(--cream-dim);line-height:1.7">${t.body}</div>
+    </div>`).join('');
+}
+
+function openModal(catId){
+  state.currentCatId=catId;
+  const cat=CATEGORIES.find(c=>c.id===catId);
+  document.getElementById('modalTitle').textContent=cat.icon+' '+cat.name;
+  document.getElementById('entryDate').value=new Date().toISOString().split('T')[0];
+  document.getElementById('entryAmount').value='';
+  document.getElementById('entryDesc').value='';
+  document.getElementById('entryVendor').value='';
+  document.getElementById('entryNotes').value='';
+  renderModalEntries();
+  document.getElementById('modalOverlay').classList.add('open');
+  setTimeout(()=>document.getElementById('entryAmount').focus(),300);
+}
+
+function renderModalEntries(){
+  const entries=getCatEntries(state.currentCatId);
+  const cat=CATEGORIES.find(c=>c.id===state.currentCatId);
+  document.getElementById('modalEntriesTitle').textContent=`${cat.name} Entries (${entries.length})`;
+  if(entries.length===0){document.getElementById('modalEntries').innerHTML='<div style="font-size:.78rem;color:var(--cream-dim);text-align:center;padding:12px">No entries yet</div>';return;}
+  document.getElementById('modalEntries').innerHTML=entries.map((e,i)=>`
+    <div class="entry-item">
+      <div class="entry-date">${e.date||'—'}</div>
+      <div class="entry-desc" title="${e.desc||''}">${e.desc||'No description'}</div>
+      <div class="entry-amount">$${parseFloat(e.amount||0).toFixed(2)}</div>
+      <button class="entry-del" onclick="deleteEntry(${i})">✕</button>
+    </div>`).join('');
+}
+
+function saveEntry(){
+  const amt=parseFloat(document.getElementById('entryAmount').value);
+  if(!amt||amt<=0){showToast('Enter a valid amount');return;}
+  const entry={
+    amount:amt,
+    date:document.getElementById('entryDate').value,
+    desc:document.getElementById('entryDesc').value,
+    vendor:document.getElementById('entryVendor').value,
+    notes:document.getElementById('entryNotes').value,
+  };
+  getCatEntries(state.currentCatId).push(entry);
+  saveState();
+  refreshAll();
+  renderModalEntries();
+  document.getElementById('entryAmount').value='';
+  document.getElementById('entryDesc').value='';
+  document.getElementById('entryVendor').value='';
+  document.getElementById('entryNotes').value='';
+  document.getElementById('entryAmount').focus();
+  showToast('Entry saved — $'+amt.toFixed(2)+' added');
+}
+
+function deleteEntry(idx){
+  const entries=getCatEntries(state.currentCatId);
+  entries.splice(idx,1);
+  saveState();
+  refreshAll();
+  renderModalEntries();
+  showToast('Entry removed');
+}
+
+function closeModal(e){
+  if(e.target===document.getElementById('modalOverlay')) closeModalDirect();
+}
+function closeModalDirect(){
+  document.getElementById('modalOverlay').classList.remove('open');
+}
+
+function refreshAll(){
+  updateDashboard();
+  buildCatGrid();
+  updateSummary();
+  buildSEQuickCats();
+}
+
+function switchTab(name){
+  ['track','selfemployed','summary','tips'].forEach(t=>{
+    document.getElementById('tab-'+t).style.display=t===name?'':'none';
+  });
+  document.querySelectorAll('#mainTabs .tab').forEach((el,i)=>{
+    const names=['track','selfemployed','summary','tips'];
+    el.classList.toggle('active',names[i]===name);
+  });
+}
+
+function calcSE(){
+  const rev=parseFloat(document.getElementById('seRevenue').value)||0;
+  const exp=parseFloat(document.getElementById('seExpenses').value)||0;
+  const net=rev-exp;
+  const seTax=net>0?net*0.9235*0.153:0;
+  const seTaxDed=seTax*0.5;
+  const qbi=(net-seTaxDed)*0.2;
+  const effectiveRate=net>0?((seTax+((net-seTaxDed)*0.22))/net*100):0;
+  document.getElementById('seNet').textContent='$'+Math.max(0,net).toLocaleString('en-US',{maximumFractionDigits:0});
+  document.getElementById('seTax').textContent='$'+seTax.toLocaleString('en-US',{maximumFractionDigits:0});
+  document.getElementById('seTaxDed').textContent='$'+seTaxDed.toLocaleString('en-US',{maximumFractionDigits:0});
+  document.getElementById('seQBI').textContent='$'+Math.max(0,qbi).toLocaleString('en-US',{maximumFractionDigits:0});
+  document.getElementById('seEffective').textContent=net>0?effectiveRate.toFixed(1)+'%':'—';
+}
+
+function exportCSV(){
+  const ye=getYearEntries();
+  let rows=[['Category','Date','Description','Vendor','Amount','Notes']];
+  CATEGORIES.forEach(c=>{
+    const entries=ye[c.id]||[];
+    entries.forEach(e=>{
+      rows.push([c.name,e.date||'',e.desc||'',e.vendor||'',e.amount||0,e.notes||'']);
+    });
+  });
+  const csv=rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\n');
+  const blob=new Blob([csv],{type:'text/csv'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='tax_deductions_'+state.year+'.csv';
+  a.click();
+  showToast('CSV exported!');
+}
+
+function clearYear(){
+  if(!confirm('Clear all entries for '+state.year+'? This cannot be undone.')) return;
+  if(state.entries[state.year]) delete state.entries[state.year];
+  saveState();
+  refreshAll();
+  showToast('Year cleared');
+}
 
 function showToast(msg){
-  const div=document.createElement('div');
-  div.style.cssText='position:fixed;bottom:20px;left:50%;transform:translateX(-50%);padding:10px 20px;background:var(--green);color:var(--bg);border-radius:50px;font-size:.82rem;font-weight:700;z-index:9998;animation:u .3s ease both;font-family:var(--fb)';
-  div.textContent=msg;
-  document.body.appendChild(div);
-  setTimeout(()=>{div.style.opacity='0';div.style.transition='opacity .3s';setTimeout(()=>div.remove(),300)},2000);
+  const t=document.getElementById('toast');
+  t.textContent=msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2500);
 }
 
-/* ═══════════════════════════════════════
-   INIT
-   ═══════════════════════════════════════ */
-function init(){
-  // Populate category dropdown
-  const sel=document.getElementById('expCategory');
-  sel.innerHTML=CATEGORIES.map(c=>`<option value="${c.id}">${c.icon} ${c.name} (${c.deductPct}% deductible)</option>`).join('');
+document.getElementById('yearSelect').addEventListener('change',function(){
+  state.year=this.value;
+  saveState();
+  refreshAll();
+});
 
-  // Populate filter dropdown
-  const fCat=document.getElementById('filterCat');
-  fCat.innerHTML='<option value="all">All Categories</option>'+CATEGORIES.map(c=>`<option value="${c.id}">${c.icon} ${c.name}</option>`).join('');
+document.addEventListener('keydown',e=>{
+  if(e.key==='Enter'&&document.getElementById('modalOverlay').classList.contains('open')){
+    saveEntry();
+  }
+  if(e.key==='Escape') closeModalDirect();
+});
 
-  // Month filter
-  const fMonth=document.getElementById('filterMonth');
-  const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  fMonth.innerHTML='<option value="all">All Months</option>'+months.map((m,i)=>`<option value="${i}">${m}</option>`).join('');
-
-  // Default date to today
-  document.getElementById('expDate').value=new Date().toISOString().split('T')[0];
-
-  // Quick add buttons
-  document.getElementById('quickBtns').innerHTML=QUICK_EXPENSES.map(q=>{
-    const cat=CATEGORIES.find(c=>c.id===q.cat);
-    return `<button class="btn btn-ghost" style="padding:8px 12px;font-size:.75rem" onclick='addExpense(${JSON.stringify(q)})'>${cat?.icon||''} ${q.desc} ($${q.amount})</button>`;
-  }).join('');
-
-  // Deduction guide
-  const taxPro = localStorage.getItem('aw_tax_pro');
-  const freeCats = CATEGORIES.slice(0,3);
-  const proCats  = CATEGORIES.slice(3);
-  function catRow(c){return `<div class="cat-bar"><span class="cat-icon">${c.icon}</span><div class="cat-info"><div class="cat-name">${c.name}</div><div class="cat-detail">${c.desc}</div></div><div class="cat-amount"><div class="ca-val" style="color:var(--green)">${c.deductPct}%</div><div class="ca-ded">${c.forW2?'W2 + 1099':'1099 only'}</div></div></div>`;}
-  const freeHtml = freeCats.map(catRow).join('');
-  const proHtml  = proCats.map(catRow).join('');
-  const gateHtml = taxPro ? proHtml : `<div style="position:relative;border-radius:10px;overflow:hidden;margin-top:4px"><div style="filter:blur(4px);pointer-events:none;user-select:none">${proHtml}</div><div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(8,9,12,.85);backdrop-filter:blur(6px);padding:24px;text-align:center"><div style="font-size:.65rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#C8A84B;margin-bottom:8px">&#128081; PRO CATEGORIES</div><div style="font-size:1rem;font-weight:700;color:#EDE7DA;margin-bottom:6px">+${proCats.length} More Categories</div><div style="font-size:.78rem;color:#9A978F;margin-bottom:14px">3 categories free. Unlock all 19 to find every deduction you qualify for.</div><button onclick="unlockPro()" style="padding:10px 20px;background:#C8A84B;color:#08101E;border:none;border-radius:8px;font-weight:700;font-size:.85rem;cursor:pointer">See all 19 categories for $0.99</button></div></div>`;
-  document.getElementById('deductionGuide').innerHTML = freeHtml + gateHtml;
-
-  renderDashboard();
-}
-
-function unlockPro(){
-  window.location.href = 'https://buy.stripe.com/3cI9AU0iOeOXg2P7QC67S0m';
-}
-(function(){
-  if(new URLSearchParams(location.search).get('paid')||new URLSearchParams(location.search).get('unlocked'))try{localStorage.setItem('aw_tax_pro','1')}catch(e){}
-})();
-init();
+loadState();
+buildCatGrid();
+buildSEQuickCats();
+updateDashboard();
+updateSummary();
+buildTips();
 </script>
-
-
-<!-- Recommendation Section -->
-<div style="max-width:540px;margin:0 auto;padding:0 16px 8px">
-  <div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);
-    border-left:3px solid #C8A84B;border-radius:12px;padding:18px 16px;margin-bottom:16px">
-    <div style="font-size:.6rem;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;
-      color:#C8A84B;margin-bottom:8px">RECOMMENDED</div>
-    <div style="font-size:.92rem;font-weight:700;color:#E6E4DF;margin-bottom:6px">Automate Your Expense Tracking</div>
-    <div style="font-size:.8rem;color:#9A978F;line-height:1.55;margin-bottom:14px">Tracking deductions manually is exhausting. Wave connects to your bank and auto-categorizes expenses year-round — completely free.</div>
-    <a href="https://www.waveapps.com" target="_blank" rel="noopener sponsored" style="
-          display:flex;align-items:center;justify-content:space-between;gap:12px;
-          padding:12px 14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
-          border-radius:10px;text-decoration:none;color:#E6E4DF;font-size:.82rem;font-weight:500;
-          transition:background .2s;margin-bottom:8px">
-          <span>Wave — Free Accounting Software</span>
-          <span style="font-size:.75rem;color:#C8A84B;white-space:nowrap;font-weight:600">🆓 Free forever</span>
-        </a><a href="https://www.freshbooks.com" target="_blank" rel="noopener sponsored" style="
-          display:flex;align-items:center;justify-content:space-between;gap:12px;
-          padding:12px 14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
-          border-radius:10px;text-decoration:none;color:#E6E4DF;font-size:.82rem;font-weight:500;
-          transition:background .2s;margin-bottom:8px">
-          <span>FreshBooks — Invoice + Expenses</span>
-          <span style="font-size:.75rem;color:#C8A84B;white-space:nowrap;font-weight:600">📊 14-day trial</span>
-        </a>
-  </div>
-</div>
-
-<!-- AnchorWithin Footer -->
-<style>
-.aw-footer{margin-top:48px;padding:20px 16px;border-top:1px solid rgba(255,255,255,.08);text-align:center;font-family:system-ui,sans-serif;font-size:13px;color:rgba(255,255,255,.35)}
-.aw-footer a{color:rgba(255,255,255,.5);text-decoration:none}.aw-footer a:hover{color:rgba(255,255,255,.8)}
-</style>
-<footer class="aw-footer">
-  Built by <a href="https://anchorwithin.com" target="_blank" rel="noopener">AnchorWithin</a>
-  &nbsp;·&nbsp;
-  <a href="https://anchorwithin.gumroad.com" target="_blank" rel="noopener">Browse All Tools</a>
-  &nbsp;·&nbsp;
-  <a href="https://anchorwithin.com/legal/terms" target="_blank" rel="noopener">Terms</a>
-  &nbsp;·&nbsp;
-  <a href="https://anchorwithin.com/legal/privacy" target="_blank" rel="noopener">Privacy</a>
-</footer>
-
 </body>
 </html>
